@@ -11,6 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mysql": "github:mysqljs/mysql"
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mysql": "github:mysqljs/mysql",
+    "nodemon": "^2.0.20"
   }
 }
