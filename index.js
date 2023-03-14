@@ -7,7 +7,7 @@ const port = 5000;
 
 app.get("/servicio/:id", function (req, res) {
   console.log("ok");
-  //connection.connect();
+  //connection.connect(); 
   
   const articleId = req.params.id;
 
@@ -34,7 +34,7 @@ app.get("/:id", function (req, res) {
   connection.query(`
   SELECT Id_Servicio, N_Servicio, Empresa.N_Empresa, V_Min_Servicio, V_Max_Servicio, C_T_Servicio, N_T_Servicio
   FROM Servicio, Empresa, Tipo_Servicio
-  WHERE Empresa.Id_Empresa=Servicio.Id_Empresa AND Servicio.Id_T_Servicio=Tipo_Servicio.Id_T_Servicio AND Servicio.Id_T_Servicio=${serviciosId};
+  WHERE Empresa.Id_Empresa=Servicio.Id_Empresa AND Servicio.Id_T_Servicio=Tipo_Servicio.Id_T_Servicio AND tipo_servicio.N_T_Servicio='${serviciosId}';
   `, (err, result, fields) => {
     if (!err) {
       console.log(result);
