@@ -5,6 +5,11 @@ const app = express();
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 const port = 5000;
 
+app.get("/empresa/insertar/:rut/:nombre/:correo/:contrasena/:facebook/:instagram/:whatsapp/:telefono/:direccion", (req, res) => {
+  const datos = req.params;
+  console.log(datos);
+})
+
 app.get("/servicio/:id", function (req, res) {
   console.log("ok");
   //connection.connect(); 
