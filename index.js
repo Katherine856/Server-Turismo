@@ -89,7 +89,27 @@ app.get("/:id", function (req, res) {
   });
 });
 
+app.get("/empresa/servicios/:id", function (req, res) {
+
+  const empresaId = req.params.id;
+
+  connection.query(`
+  SELECT Id_Servicio, N_Servicio, Empresa.N_Empresa, V_Min_Servicio, V_Max_Servicio, C_T_Servicio 
+  FROM Servicio, Empresa, Tipo_Servicio 
+  WHERE servicio.Id_Empresa=Empresa.Id_Empresa 
+  AND tipo_servicio.Id_T_Servicio=servicio.Id_T_Servicio 
+  AND Servicio.Id_Empresa=${empresaId};
+  `, (err, result, fields) => {
+    if (!err) {
+      console.log(result);
+      res.send(result);
+    } else {
+      throw err;
+    }
+  });
+});
 
 app.listen(port, function () {
   console.log(`Example app listening on port ${port}!`);
 });
+
