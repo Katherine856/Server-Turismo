@@ -1,13 +1,25 @@
 const express = require("express");
 const cors = require('cors');
+const multer = require('multer')
 const connection = require("./conexion/Conectar");
+
 const app = express();
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+const upload = multer({
+  limits: { fileSize: 10 * 1024 * 1024 } // 10 MB limit
+});
 const port = 5000;
+
+
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 app.get("/empresa/insertar/:rut/:nombre/:correo/:contrasena/:facebook/:instagram/:whatsapp/:telefono/:direccion", (req, res) => {
   const datos = req.params;
   console.log(datos);
+})
+
+//Se inserta un nuevo servicio 
+app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) =>{
+  console.log(req.files);
 })
 
 app.get("/servicio/:id", function (req, res) {
