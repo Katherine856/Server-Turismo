@@ -17,7 +17,8 @@ app.get('/login/:correo/:contrasena', (req, res) => {
 
   connection.query(`SELECT Id_Empresa FROM empresa WHERE C_Empresa = '${correo}' AND K_Empresa = '${contrasena}'`,
   (err, result) => {
-    if(!err){
+    if(!err && result.length === 1){
+      console.log(result);
       res.send(''+result[0].Id_Empresa);
     }else{
       console.log(err);
@@ -39,10 +40,13 @@ app.get("/empresa/insertar/:rut/:nombre/:correo/:contrasena/:facebook/:instagram
   });
 })
 
-
-app.get("/servicio/insertar/:nombre/:empresa/:min/:max/:descripcion/:tiposervicio", (req, res) => {
-  const datos = req.params;
+//Se inserta un nuevo servicio 
+app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) =>{
+  const datos = req.body;
   datos.id= Math.ceil(Math.random()*2147483646);
+  console.log(req.files);
+  console.log(datos);
+  /*
   console.log(`INSERT INTO servicio VALUES (${datos.id}, '${datos.nombre}', ${datos.empresa}, ${datos.min}, ${datos.max}, '${datos.descripcion}', ${datos.tiposervicio})`);
   connection.query(`
   INSERT INTO servicio VALUES (${datos.id}, '${datos.nombre}', ${datos.empresa}, ${datos.min}, ${datos.max}, '${datos.descripcion}', ${datos.tiposervicio})
@@ -55,12 +59,7 @@ app.get("/servicio/insertar/:nombre/:empresa/:min/:max/:descripcion/:tiposervici
       res.sendStatus(505);
     }
   });
-
-})
-
-//Se inserta un nuevo servicio 
-app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) =>{
-  console.log(req.files);
+  */
 })
 
 app.get("/servicio/:id", function (req, res) {
