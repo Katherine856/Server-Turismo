@@ -1,7 +1,14 @@
 const express = require("express");
 const cors = require('cors');
 const multer = require('multer')
-const connection = require("./conexion/Conectar");
+const { 
+  verificarUsuario,
+  insertarEmpresa,
+  insertarServicio,
+  obtenerServicio,
+  obtenerServiciosEmpresa,
+  obtenerServiciosPorTipo
+} = require("./Conexion/Consultas");
 
 const app = express();
 const upload = multer({
@@ -11,112 +18,66 @@ const upload = multer({
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 const port = 5000;
 
+//Se hace login
 app.get('/login/:correo/:contrasena', (req, res) => {
   const correo = req.params.correo;
   const contrasena = req.params.contrasena;
 
-  connection.query(`SELECT Id_Empresa FROM empresa WHERE C_Empresa = '${correo}' AND K_Empresa = '${contrasena}'`,
-  (err, result) => {
-    if(!err && result.length === 1){
-      console.log(result);
-      res.send(''+result[0].Id_Empresa);
-    }else{
-      console.log(err);
-      res.sendStatus(505);
-    }
+  verificarUsuario(correo, contrasena, (resultado) => {
+    console.log(resultado);
+    res.send(resultado ?? 'error')
   })
 })
 
+//Se agrega una nueva empresa
 app.get("/empresa/insertar/:rut/:nombre/:correo/:contrasena/:facebook/:instagram/:whatsapp/:telefono/:direccion", (req, res) => {
   const datos = req.params;
-  connection.query(`
-  INSERT INTO empresa VALUES (${datos.rut}, '${datos.nombre}', '${datos.correo}', '${datos.contrasena}', '${datos.facebook}', '${datos.instagram}', '${datos.whatsapp}', ${datos.telefono}, '${datos.direccion}', 'InActivo')
-  `, (err, result, fields) => {
-    if (!err) {
-      console.log(result);
-    } else {
-      throw err;
-    }
-  });
+
+  insertarEmpresa(datos, resultado => {
+    console.log(resultado);
+    res.send(resultado ?? 'error')
+  })
 })
 
 //Se inserta un nuevo servicio 
-app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) =>{
+app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) => {
   const datos = req.body;
-  datos.id= Math.ceil(Math.random()*2147483646);
-  console.log(req.files);
-  console.log(datos);
-  /*
-  console.log(`INSERT INTO servicio VALUES (${datos.id}, '${datos.nombre}', ${datos.empresa}, ${datos.min}, ${datos.max}, '${datos.descripcion}', ${datos.tiposervicio})`);
-  connection.query(`
-  INSERT INTO servicio VALUES (${datos.id}, '${datos.nombre}', ${datos.empresa}, ${datos.min}, ${datos.max}, '${datos.descripcion}', ${datos.tiposervicio})
-  `, (err, result, fields) => {
-    if (!err) {
-      console.log(result);
-      res.sendStatus(200);
-    } else {
-      console.log(err);
-      res.sendStatus(505);
-    }
-  });
-  */
+  const archivos = req.files;
+  
+  insertarServicio(datos, archivos, resultado => {
+    console.log(resultado);
+    res.send(resultado ?? 'error');
+  })
 })
 
+//Se obtiene un servicio por su id
 app.get("/servicio/:id", function (req, res) {
-  
   const articleId = req.params.id;
 
-  connection.query(`
-  SELECT Id_Servicio, N_Servicio, N_Empresa, V_Min_Servicio, V_Max_Servicio, D_Servicio, F_Empresa, I_Empresa, W_Empresa, T_Empresa, C_Empresa D_Empresa, C_T_Servicio 
-  FROM Servicio, Empresa, Tipo_servicio 
-  WHERE Empresa.Id_Empresa=Servicio.Id_Empresa AND Servicio.Id_T_Servicio=Tipo_Servicio.Id_T_Servicio AND Id_Servicio=${articleId};
-  `, (err, result, fields) => {
-    if (!err) {
-      console.log(result);
-      res.send(result[0]);
-    } else {
-      res.sendStatus(505);
-    }
-  });
-
+  obtenerServicio(articleId, resultado => {
+    console.log(resultado);
+    res.send(resultado ?? 'error')
+  })
 });
 
+//Se filtra por tipo de servicio
 app.get("/:id", function (req, res) {
-
   const serviciosId = req.params.id;
 
-  connection.query(`
-  SELECT Id_Servicio, N_Servicio, Empresa.N_Empresa, V_Min_Servicio, V_Max_Servicio, C_T_Servicio, N_T_Servicio
-  FROM Servicio, Empresa, Tipo_Servicio
-  WHERE Empresa.Id_Empresa=Servicio.Id_Empresa AND Servicio.Id_T_Servicio=Tipo_Servicio.Id_T_Servicio AND tipo_servicio.N_T_Servicio='${serviciosId}';
-  `, (err, result, fields) => {
-    if (!err) {
-      console.log(result);
-      res.send(result);
-    } else {
-      throw err;
-    }
-  });
+  obtenerServiciosPorTipo(serviciosId, resultado =>{
+    console.log(resultado);
+    res.send(resultado ?? 'error');
+  })
 });
 
+//Se obtienen los servicios ofrecidos por una empresa
 app.get("/empresa/servicios/:id", function (req, res) {
-
   const empresaId = req.params.id;
 
-  connection.query(`
-  SELECT Id_Servicio, N_Servicio, Empresa.N_Empresa, V_Min_Servicio, V_Max_Servicio, C_T_Servicio 
-  FROM Servicio, Empresa, Tipo_Servicio 
-  WHERE servicio.Id_Empresa=Empresa.Id_Empresa 
-  AND tipo_servicio.Id_T_Servicio=servicio.Id_T_Servicio 
-  AND Servicio.Id_Empresa=${empresaId};
-  `, (err, result, fields) => {
-    if (!err) {
-      console.log(result);
-      res.send(result);
-    } else {
-      throw err;
-    }
-  });
+  obtenerServiciosEmpresa(empresaId, resultado =>{
+    console.log(resultado);
+    res.send(resultado ?? 'error')
+  })
 });
 
 app.listen(port, function () {
