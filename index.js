@@ -45,7 +45,6 @@ app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) => {
   const archivos = req.files;
   
   insertarServicio(datos, archivos, resultado => {
-    console.log(resultado);
     res.send(resultado ?? 'error');
   })
 })

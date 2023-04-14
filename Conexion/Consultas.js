@@ -30,6 +30,7 @@ let insertarServicio = (datos, archivos, resultado) => {
     INSERT INTO servicio VALUES (${datos.id}, '${datos.nombre}', ${datos.idEmpresa}, ${datos.min}, ${datos.max}, '${datos.descripcion}', ${datos.tipo})
     `;
     connection.query(query, (err, result) => {
+        console.log('No hubo error');
         if (!err) {
             try {
                 subirImagenes(datos.id, archivos, (r) => {
