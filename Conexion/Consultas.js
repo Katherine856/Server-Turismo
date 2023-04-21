@@ -1,5 +1,6 @@
 const  connection  = require('./Conectar');
-const subirImagenes = require('./Util');
+const { subirImagenes, cargarImagenes} = require('./Util');
+
 
 let verificarUsuario = (correo, contrasena, datosCorrectos) => {
     let query = `SELECT Id_Empresa FROM empresa WHERE C_Empresa = '${correo}' AND K_Empresa = '${contrasena}'`;
@@ -50,6 +51,7 @@ let insertarServicio = (datos, archivos, resultado) => {
         }
     });
 }
+
 let obtenerServicio = (id, resultado) => {
     connection.query(`
     SELECT Id_Servicio, N_Servicio, N_Empresa, V_Min_Servicio, V_Max_Servicio, D_Servicio, F_Empresa, I_Empresa, W_Empresa, T_Empresa, C_Empresa D_Empresa, C_T_Servicio 
@@ -57,7 +59,11 @@ let obtenerServicio = (id, resultado) => {
     WHERE Empresa.Id_Empresa=Servicio.Id_Empresa AND Servicio.Id_T_Servicio=Tipo_Servicio.Id_T_Servicio AND Id_Servicio=${id};
     `, (err, result, fields) => {
         if (!err) {
-            resultado(result[0]);
+            // console.log("Imagenes cargadas: ");
+            let imagenes = cargarImagenes(id);
+            let response = {...result[0]};
+            response.imagenes = imagenes ? imagenes : null;
+            resultado(response);
         } else {
             resultado(false)
         }
