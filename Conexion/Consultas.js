@@ -14,9 +14,12 @@ let verificarUsuario = (correo, contrasena, datosCorrectos) => {
 }
 
 let insertarEmpresa = (datos, resultado) => {
-    connection.query(`
-  INSERT INTO empresa VALUES (${datos.rut}, '${datos.nombre}', '${datos.correo}', '${datos.contrasena}', '${datos.facebook}', '${datos.instagram}', '${datos.whatsapp}', ${datos.telefono}, '${datos.direccion}', 'InActivo')
-  `, (err, result, fields) => {
+    let query = `
+    INSERT INTO empresa VALUES (${datos.rut}, '${datos.nombre}', '${datos.correo}', '${datos.contrasena}', '${datos.facebook}', '${datos.instagram}', '${datos.whatsapp}', ${datos.telefono}, '${datos.direccion}', 'InActivo')
+    `
+
+    console.log(query);
+    connection.query(query, (err, result, fields) => {
         if (!err) {
             resultado(result)
         } else {
@@ -29,6 +32,7 @@ let insertarServicio = (datos, archivos, resultado) => {
     let query = `
     INSERT INTO servicio VALUES (${datos.id}, '${datos.nombre}', ${datos.idEmpresa}, ${datos.min}, ${datos.max}, '${datos.descripcion}', ${datos.tipo})
     `;
+    console.log(query);
     connection.query(query, (err, result) => {
         console.log('No hubo error');
         if (!err) {
@@ -50,7 +54,7 @@ let obtenerServicio = (id, resultado) => {
     connection.query(`
     SELECT Id_Servicio, N_Servicio, N_Empresa, V_Min_Servicio, V_Max_Servicio, D_Servicio, F_Empresa, I_Empresa, W_Empresa, T_Empresa, C_Empresa D_Empresa, C_T_Servicio 
     FROM Servicio, Empresa, Tipo_servicio 
-    WHERE Empresa.Id_Empresa=Servicio.Id_Empresa AND Servicio.Id_T_Servicio=Tipo_Servicio.Id_T_Servicio AND Id_Servicio=${articleId};
+    WHERE Empresa.Id_Empresa=Servicio.Id_Empresa AND Servicio.Id_T_Servicio=Tipo_Servicio.Id_T_Servicio AND Id_Servicio=${id};
     `, (err, result, fields) => {
         if (!err) {
             resultado(result[0]);
