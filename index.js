@@ -54,7 +54,7 @@ app.get("/servicio/:id", function (req, res) {
   const articleId = req.params.id;
 
   obtenerServicio(articleId, resultado => {
-    console.log(resultado);
+    //console.log(resultado);
     res.send(resultado ?? 'error')
   })
 });
