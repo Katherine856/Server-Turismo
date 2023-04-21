@@ -25,12 +25,11 @@ const cargarImagenes = (id) => {
         const filesData = files.map( filename => {
             const filepath = path.join(pathImg, filename);
             const buffer = readFileSync(filepath);
+            const uint8Array = new Uint8Array(buffer);
+            const base64String = Buffer.from(uint8Array).toString('base64');
             const contentType = mime.contentType(filepath);
-            return {
-                name: filename,
-                buffer: buffer,
-                contentType: contentType
-            }
+            const imgURL = `data:${contentType};base64,${base64String}`;
+            return imgURL;
         })
         return filesData;
     }catch(err){

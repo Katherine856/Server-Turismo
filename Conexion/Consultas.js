@@ -62,7 +62,7 @@ let obtenerServicio = (id, resultado) => {
             // console.log("Imagenes cargadas: ");
             let imagenes = cargarImagenes(id);
             let response = {...result[0]};
-            response.imagenes = imagenes ? imagenes : null;
+            response.imgURLs = imagenes ? imagenes : null;
             resultado(response);
         } else {
             resultado(false)
@@ -97,6 +97,7 @@ const obtenerServiciosPorTipo = (id, resultado) => {
             console.log(result);
             resultado(result)
         } else {
+            console.log(err);
             resultado(false)
         }
     });

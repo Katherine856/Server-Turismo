@@ -60,10 +60,10 @@ app.get("/servicio/:id", function (req, res) {
 });
 
 //Se filtra por tipo de servicio
-app.get("/:id", function (req, res) {
-  const serviciosId = req.params.id;
+app.get("/:tipoServicio", function (req, res) {
+  const tipoServicio = req.params.tipoServicio;
 
-  obtenerServiciosPorTipo(serviciosId, resultado =>{
+  obtenerServiciosPorTipo(tipoServicio, resultado =>{
     console.log(resultado);
     res.send(resultado ?? 'error');
   })
