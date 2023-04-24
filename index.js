@@ -20,11 +20,12 @@ app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 const port = 5000;
 
 //Se hace login
-app.get('/login/:correo/:contrasena', (req, res) => {
+app.get('/login/:tipo/:correo/:contrasena', (req, res) => {
+  const tipo = req.params.tipo;
   const correo = req.params.correo;
   const contrasena = req.params.contrasena;
 
-  verificarUsuario(correo, contrasena, (resultado) => {
+  verificarUsuario(tipo, correo, contrasena, (resultado) => {
     console.log(resultado);
     res.send(resultado ?? 'error')
   })

@@ -2,15 +2,20 @@ const connection = require('./Conectar');
 const { subirImagenes, cargarImagenes } = require('./Util');
 
 
-let verificarUsuario = (correo, contrasena, datosCorrectos) => {
-  let query = `SELECT Id_Empresa FROM empresa WHERE C_Empresa = '${correo}' AND K_Empresa = '${contrasena}'`;
+let verificarUsuario = (tipo, correo, contrasena, datosCorrectos) => {
+  let query = `SELECT Id_${tipo} FROM ${tipo} WHERE C_${tipo} = '${correo}' AND K_${tipo} = '${contrasena}'`;
+  console.log(query);
   connection.query(query,
     (err, result) => {
-      if (!err && result.length === 1) {
+      if (!err && result.length === 1 && tipo==='Empresa') {
         datosCorrectos('' + result[0].Id_Empresa);
-      } else {
-        datosCorrectos(false);
       }
+      if (!err && result.length === 1 && tipo==='Usuario') {
+        datosCorrectos('' + result[0].Id_Usuario);
+      }
+      if (!err && result.length === 1 && tipo==='Administrador') {
+        datosCorrectos('' + result[0].Id_Administrador);
+      } 
     })
 }
 
@@ -52,7 +57,7 @@ let insertarServicio = (datos, archivos, resultado) => {
   });
 }
 
-let obtenerServicio = (id, resultado) => {
+let obtenerDataServicio = (id, resultado) => {
     connection.query(`
     SELECT Id_Servicio, N_Servicio, N_Empresa, V_Min_Servicio, V_Max_Servicio, D_Servicio, F_Empresa, I_Empresa, W_Empresa, T_Empresa, C_Empresa, D_Empresa, C_T_Servicio 
     FROM Servicio, Empresa, Tipo_servicio 
