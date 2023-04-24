@@ -8,7 +8,7 @@ const subirImagenes = (id, archivos, callback) => {
         if (!err) {
             for (const img of archivos) {
                 writeFile(`${pathName}/${img.originalname}`, img.buffer, (err) => {
-                    console.log(err ? err : 'Subida bien');
+                    if(err) console.log(err);
                 })
             }
             callback(true)
@@ -24,12 +24,10 @@ const cargarImagenes = (id) => {
         let files = readdirSync(pathImg);
         const filesData = files.map( filename => {
             const filepath = path.join(pathImg, filename);
+            const contentType = mime.contentType(filepath)
             const buffer = readFileSync(filepath);
-            const uint8Array = new Uint8Array(buffer);
-            const base64String = Buffer.from(uint8Array).toString('base64');
-            const contentType = mime.contentType(filepath);
-            const imgURL = `data:${contentType};base64,${base64String}`;
-            return imgURL;
+            const base64Data = Buffer.from(buffer).toString('base64');
+            return `data:${contentType};base64,${base64Data}`;
         })
         return filesData;
     }catch(err){

@@ -5,7 +5,8 @@ const {
   verificarUsuario,
   insertarEmpresa,
   insertarServicio,
-  obtenerServicio,
+  obtenerDataServicio,
+  obtenerImagenesServicio,
   obtenerServiciosEmpresa,
   obtenerServiciosPorTipo
 } = require("./Conexion/Consultas");
@@ -45,6 +46,7 @@ app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) => {
   const archivos = req.files;
   
   insertarServicio(datos, archivos, resultado => {
+    console.log(`Servicio insertado: ${resultado}`);
     res.send(resultado ?? 'error');
   })
 })
@@ -53,7 +55,17 @@ app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) => {
 app.get("/servicio/:id", function (req, res) {
   const articleId = req.params.id;
 
-  obtenerServicio(articleId, resultado => {
+  obtenerDataServicio(articleId, resultado => {
+    //console.log(resultado);
+    res.send(resultado ?? 'error')
+  })
+});
+
+//Se obtienen las imágenes de un servicio por su id
+app.get("/servicio/imagenes/:id", function (req, res) {
+  const articleId = req.params.id;
+
+  obtenerImagenesServicio(articleId, resultado => {
     //console.log(resultado);
     res.send(resultado ?? 'error')
   })
