@@ -1,21 +1,26 @@
 const connection = require('./Conectar');
 const { subirImagenes, cargarImagenes } = require('./Util');
 
-
 let verificarUsuario = (tipo, correo, contrasena, datosCorrectos) => {
   let query = `SELECT Id_${tipo} FROM ${tipo} WHERE C_${tipo} = '${correo}' AND K_${tipo} = '${contrasena}'`;
   console.log(query);
   connection.query(query,
     (err, result) => {
-      if (!err && result.length === 1 && tipo==='Empresa') {
-        datosCorrectos('' + result[0].Id_Empresa);
+      if(!err && result.length === 1){
+        if (tipo==='Empresa') {
+          datosCorrectos('' + result[0].Id_Empresa);
+        }
+        else if (tipo==='Usuario') {
+          datosCorrectos('' + result[0].Id_Usuario);
+        }
+        else if (tipo==='Administrador') {
+          datosCorrectos('' + result[0].Id_Administrador);
+        } else {
+          datosCorrectos(false);
+        }
+      } else {
+        datosCorrectos(false);
       }
-      if (!err && result.length === 1 && tipo==='Usuario') {
-        datosCorrectos('' + result[0].Id_Usuario);
-      }
-      if (!err && result.length === 1 && tipo==='Administrador') {
-        datosCorrectos('' + result[0].Id_Administrador);
-      } 
     })
 }
 
@@ -38,7 +43,7 @@ let insertarServicio = (datos, archivos, resultado) => {
   let query = `
     INSERT INTO servicio VALUES (${datos.id}, '${datos.nombre}', ${datos.idEmpresa}, ${datos.min}, ${datos.max}, '${datos.descripcion}', ${datos.tipo})
     `;
-  // console.log(query);
+
   connection.query(query, (err, result) => {
     if (!err) {
       try {
@@ -55,6 +60,24 @@ let insertarServicio = (datos, archivos, resultado) => {
       resultado(false)
     }
   });
+}
+
+let insertarComentario = (datos, resultado) => {
+  let id = Math.ceil(Math.random() * 2147483646);
+  let {titulo, descripcion, valor, idServicio, idUsuario} = datos;
+
+  let query = `
+    INSERT INTO calificacion VALUES (${id}, '${titulo}', '${descripcion}', ${valor}, ${idServicio}, ${idUsuario})
+    `;
+
+  connection.query(query, (err, result, fields) => {
+    if (!err) {
+      resultado(true)
+    } else {
+      resultado(false)
+    }
+  });
+
 }
 
 let obtenerDataServicio = (id, resultado) => {
@@ -116,5 +139,6 @@ module.exports = {
   obtenerDataServicio,
   obtenerImagenesServicio,
   obtenerServiciosEmpresa,
-  obtenerServiciosPorTipo
+  obtenerServiciosPorTipo,
+  insertarComentario
 }

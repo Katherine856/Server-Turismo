@@ -8,16 +8,19 @@ const {
   obtenerDataServicio,
   obtenerImagenesServicio,
   obtenerServiciosEmpresa,
-  obtenerServiciosPorTipo
+  obtenerServiciosPorTipo,
+  insertarComentario
 } = require("./Conexion/Consultas");
 
 const app = express();
 const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10 MB limit
 });
+app.use(express.json())
 
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 const port = 5000;
+
 
 //Se hace login
 app.get('/login/:tipo/:correo/:contrasena', (req, res) => {
@@ -49,6 +52,17 @@ app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) => {
   insertarServicio(datos, archivos, resultado => {
     console.log(`Servicio insertado: ${resultado}`);
     res.send(resultado ?? 'error');
+  })
+})
+
+//Se inserta un nuevo comentario 
+app.post("/servicio/insertarcomentario", (req, res) => {
+  const datos = req.body;
+  console.log(req.body)
+
+  insertarComentario(datos, resultado => {
+    console.log(`Servicio insertado: ${resultado}`);
+    res.send(resultado ?? 'error')
   })
 })
 
