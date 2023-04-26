@@ -4,12 +4,16 @@ const multer = require('multer')
 const { 
   verificarUsuario,
   insertarEmpresa,
+  insertarUsuario,
   insertarServicio,
+  insertarComentario,
   obtenerDataServicio,
   obtenerImagenesServicio,
   obtenerServiciosEmpresa,
   obtenerServiciosPorTipo,
-  insertarComentario
+  verComentario,
+  verEmpresas,
+  cambiarEstado
 } = require("./Conexion/Consultas");
 
 const app = express();
@@ -44,6 +48,16 @@ app.get("/empresa/insertar/:rut/:nombre/:correo/:contrasena/:facebook/:instagram
   })
 })
 
+//Se agrega un nuevo usuario
+app.get("/usuario/insertar/:id/:nombre/:correo/:contrasena/:telefono", (req, res) => {
+  const datos = req.params;
+
+  insertarUsuario(datos, resultado => {
+    console.log(resultado);
+    res.send(resultado ?? 'error')
+  })
+})
+
 //Se inserta un nuevo servicio 
 app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) => {
   const datos = req.body;
@@ -56,12 +70,30 @@ app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) => {
 })
 
 //Se inserta un nuevo comentario 
-app.post("/servicio/insertarcomentario", (req, res) => {
-  const datos = req.body;
-  console.log(req.body)
+app.get("/servicio/insertarcomentario/:titulo/:descripcion/:valor/:idServ/:idUser", (req, res) => {
+  const titulo = req.params.titulo;
+  const descripcion = req.params.descripcion;
+  const valor = req.params.valor;
+  const idServ = req.params.idServ;
+  const idUser = req.params.idUser;
 
-  insertarComentario(datos, resultado => {
-    console.log(`Servicio insertado: ${resultado}`);
+  insertarComentario(titulo, descripcion, valor, idServ, idUser, resultado => {
+    res.send(resultado ?? 'error')
+  })
+})
+
+//ver comentarios
+app.get("/servicio/vercomen/:idServ", (req, res) => {
+  const idServ = req.params.idServ;
+
+  verComentario(idServ, resultado => {
+    res.send(resultado ?? 'error')
+  })
+})
+
+app.get("/verEmpresas", (req, res) => {
+
+  verEmpresas(resultado => {
     res.send(resultado ?? 'error')
   })
 })
@@ -105,6 +137,16 @@ app.get("/empresa/servicios/:id", function (req, res) {
     res.send(resultado ?? 'error')
   })
 });
+
+app.get("/empresa/servicios/:estado/:idEmpresa", function (req, res) {
+  const estado = req.params.estado;
+  const idEmpresa = req.params.idEmpresa;
+
+  cambiarEstado(estado, idEmpresa, resultado =>{
+    res.send(resultado ?? 'error')
+  })
+});
+
 
 app.listen(port, function () {
   console.log(`Example app listening on port ${port}!`);

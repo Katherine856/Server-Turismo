@@ -38,6 +38,22 @@ let insertarEmpresa = (datos, resultado) => {
     }
   });
 }
+
+let insertarUsuario = (datos, resultado) => {
+  let query = `
+    INSERT INTO usuario VALUES (${datos.id}, '${datos.nombre}', '${datos.correo}', '${datos.contrasena}', ${datos.telefono})
+    `
+
+  console.log(query);
+  connection.query(query, (err, result, fields) => {
+    if (!err) {
+      resultado(result)
+    } else {
+      resultado(false)
+    }
+  });
+}
+
 let insertarServicio = (datos, archivos, resultado) => {
   datos.id = Math.ceil(Math.random() * 2147483646);
   let query = `
@@ -62,9 +78,8 @@ let insertarServicio = (datos, archivos, resultado) => {
   });
 }
 
-let insertarComentario = (datos, resultado) => {
+let insertarComentario = (titulo, descripcion, valor, idServicio, idUsuario, resultado) => {
   let id = Math.ceil(Math.random() * 2147483646);
-  let {titulo, descripcion, valor, idServicio, idUsuario} = datos;
 
   let query = `
     INSERT INTO calificacion VALUES (${id}, '${titulo}', '${descripcion}', ${valor}, ${idServicio}, ${idUsuario})
@@ -77,6 +92,41 @@ let insertarComentario = (datos, resultado) => {
       resultado(false)
     }
   });
+
+}
+
+let verComentario = (idServicio, resultado) =>{
+
+  let query = `
+  SELECT Titulo_Calificacion, Valor_Calificacion, Desc_Calificacion, N_Usuario FROM calificacion, usuario 
+  WHERE Id_Servicio = ${idServicio} AND calificacion.Id_Usuario=usuario.Id_Usuario;
+    `;
+   console.log(query)
+
+    connection.query(query, (err, result, fields) => {
+      if (!err) {
+        resultado(result)
+      } else {
+        resultado(false)
+      }
+    });  
+
+}
+
+let verEmpresas = (resultado) =>{
+
+  let query = `
+  SELECT * FROM Empresa;
+    `;
+   console.log(query)
+
+    connection.query(query, (err, result, fields) => {
+      if (!err) {
+        resultado(result)
+      } else {
+        resultado(false)
+      }
+    });  
 
 }
 
@@ -120,25 +170,46 @@ const obtenerServiciosPorTipo = (id, resultado) => {
   connection.query(`
   SELECT Id_Servicio, N_Servicio, Empresa.N_Empresa, V_Min_Servicio, V_Max_Servicio, C_T_Servicio, N_T_Servicio
   FROM Servicio, Empresa, Tipo_Servicio
-  WHERE Empresa.Id_Empresa=Servicio.Id_Empresa AND Servicio.Id_T_Servicio=Tipo_Servicio.Id_T_Servicio AND tipo_servicio.N_T_Servicio='${id}';
+  WHERE Empresa.Id_Empresa=Servicio.Id_Empresa 
+  AND Servicio.Id_T_Servicio=Tipo_Servicio.Id_T_Servicio
+  AND Empresa.E_Empresa='Activo'
+  AND tipo_servicio.N_T_Servicio='${id}';
   `, (err, result) => {
     if (!err) {
-      console.log(result);
       resultado(result)
     } else {
-      console.log(err);
       resultado(false)
     }
   });
 }
 
+const cambiarEstado = (estado, idEmpresa, resultado) => {
+
+  let query = `
+  UPDATE Empresa SET E_Empresa = '${estado}' WHERE Id_Empresa = ${idEmpresa};
+    `;
+
+    connection.query(query, (err, result, fields) => {
+      if (!err) {
+        resultado(true)
+      } else {
+        resultado(false)
+      }
+    }); 
+
+}
+
 module.exports = {
   verificarUsuario,
   insertarEmpresa,
+  insertarUsuario,
   insertarServicio,
+  insertarComentario,
   obtenerDataServicio,
   obtenerImagenesServicio,
   obtenerServiciosEmpresa,
   obtenerServiciosPorTipo,
-  insertarComentario
+  verComentario,
+  verEmpresas,
+  cambiarEstado
 }
