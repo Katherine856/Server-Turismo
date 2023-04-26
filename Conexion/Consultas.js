@@ -3,7 +3,6 @@ const { subirImagenes, cargarImagenes } = require('./Util');
 
 let verificarUsuario = (tipo, correo, contrasena, datosCorrectos) => {
   let query = `SELECT Id_${tipo} FROM ${tipo} WHERE C_${tipo} = '${correo}' AND K_${tipo} = '${contrasena}'`;
-  console.log(query);
   connection.query(query,
     (err, result) => {
       if(!err && result.length === 1){
@@ -28,8 +27,6 @@ let insertarEmpresa = (datos, resultado) => {
   let query = `
     INSERT INTO empresa VALUES (${datos.rut}, '${datos.nombre}', '${datos.correo}', '${datos.contrasena}', '${datos.facebook}', '${datos.instagram}', '${datos.whatsapp}', ${datos.telefono}, '${datos.direccion}', 'InActivo')
     `
-
-  console.log(query);
   connection.query(query, (err, result, fields) => {
     if (!err) {
       resultado(result)
@@ -43,8 +40,6 @@ let insertarUsuario = (datos, resultado) => {
   let query = `
     INSERT INTO usuario VALUES (${datos.id}, '${datos.nombre}', '${datos.correo}', '${datos.contrasena}', ${datos.telefono})
     `
-
-  console.log(query);
   connection.query(query, (err, result, fields) => {
     if (!err) {
       resultado(result)
@@ -68,11 +63,9 @@ let insertarServicio = (datos, archivos, resultado) => {
           if (r) resultado(objeto)
         })
       } catch (e) {
-        console.log(e);
         resultado(false)
       }
     } else {
-      console.log(err);
       resultado(false)
     }
   });
@@ -101,7 +94,6 @@ let verComentario = (idServicio, resultado) =>{
   SELECT Titulo_Calificacion, Valor_Calificacion, Desc_Calificacion, N_Usuario FROM calificacion, usuario 
   WHERE Id_Servicio = ${idServicio} AND calificacion.Id_Usuario=usuario.Id_Usuario;
     `;
-   console.log(query)
 
     connection.query(query, (err, result, fields) => {
       if (!err) {
@@ -118,7 +110,6 @@ let verEmpresas = (resultado) =>{
   let query = `
   SELECT * FROM Empresa;
     `;
-   console.log(query)
 
     connection.query(query, (err, result, fields) => {
       if (!err) {
@@ -188,7 +179,6 @@ const cambiarEstado = (estado, idEmpresa, resultado) => {
   let query = `
   UPDATE Empresa SET E_Empresa = '${estado}' WHERE Id_Empresa = ${idEmpresa};
     `;
-
     connection.query(query, (err, result, fields) => {
       if (!err) {
         resultado(true)

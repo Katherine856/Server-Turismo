@@ -33,7 +33,6 @@ app.get('/login/:tipo/:correo/:contrasena', (req, res) => {
   const contrasena = req.params.contrasena;
 
   verificarUsuario(tipo, correo, contrasena, (resultado) => {
-    console.log(resultado);
     res.send(resultado ?? 'error')
   })
 })
@@ -43,7 +42,6 @@ app.get("/empresa/insertar/:rut/:nombre/:correo/:contrasena/:facebook/:instagram
   const datos = req.params;
 
   insertarEmpresa(datos, resultado => {
-    console.log(resultado);
     res.send(resultado ?? 'error')
   })
 })
@@ -53,7 +51,6 @@ app.get("/usuario/insertar/:id/:nombre/:correo/:contrasena/:telefono", (req, res
   const datos = req.params;
 
   insertarUsuario(datos, resultado => {
-    console.log(resultado);
     res.send(resultado ?? 'error')
   })
 })
@@ -64,7 +61,6 @@ app.post("/servicio/insertar", upload.array('imagenes', 10), (req, res) => {
   const archivos = req.files;
   
   insertarServicio(datos, archivos, resultado => {
-    console.log(`Servicio insertado: ${resultado}`);
     res.send(resultado ?? 'error');
   })
 })
@@ -103,7 +99,6 @@ app.get("/servicio/:id", function (req, res) {
   const articleId = req.params.id;
 
   obtenerDataServicio(articleId, resultado => {
-    //console.log(resultado);
     res.send(resultado ?? 'error')
   })
 });
@@ -113,7 +108,6 @@ app.get("/servicio/imagenes/:id", function (req, res) {
   const articleId = req.params.id;
 
   obtenerImagenesServicio(articleId, resultado => {
-    //console.log(resultado);
     res.send(resultado ?? 'error')
   })
 });
@@ -123,7 +117,6 @@ app.get("/:tipoServicio", function (req, res) {
   const tipoServicio = req.params.tipoServicio;
 
   obtenerServiciosPorTipo(tipoServicio, resultado =>{
-    console.log(resultado);
     res.send(resultado ?? 'error');
   })
 });
@@ -133,7 +126,6 @@ app.get("/empresa/servicios/:id", function (req, res) {
   const empresaId = req.params.id;
 
   obtenerServiciosEmpresa(empresaId, resultado =>{
-    console.log(resultado);
     res.send(resultado ?? 'error')
   })
 });
