@@ -3,7 +3,7 @@ const { HOST, USER, PASSWORD, DATABASE, DB_PORT } = config
 //const AcreatePool = require('mysql2/promise');
 //const { createPool } = AcreatePool
 
-let mysql = require('mysql');
+let mysql = require('mysql2');
 let connection = mysql.createPool({
   host: HOST,
   user: USER,
