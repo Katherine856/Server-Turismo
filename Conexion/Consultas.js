@@ -116,7 +116,7 @@ let verEmpresas = (resultado) =>{
       if (!err) {
         resultado(result)
       } else {
-        resultado(false)
+        resultado(err)
       }
     });  
 
