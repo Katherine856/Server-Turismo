@@ -13,8 +13,5 @@ let connection = mysql.createPool({
 });
 
 console.log(HOST + ': ' + USER + ': ' + PASSWORD + ': ' + DB_PORT + ': ' + DATABASE);
-connection.connect((err) => {
-  //console.log(err ? 'Hubo un error': 'Conexión exitosa');
-})
 
 module.exports = connection
