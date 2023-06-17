@@ -6,10 +6,11 @@ let connection = mysql.createConnection({
   host: HOST,
   user: USER,
   password: PASSWORD,
-  database: DATABASE,
-  port: DB_PORT
+  port: DB_PORT,
+  database: DATABASE
 });
 
+console.log(HOST + ': ' + USER + ': ' + PASSWORD + ': ' + DB_PORT + ': ' + DATABASE);
 connection.connect((err) => {
   //console.log(err ? 'Hubo un error': 'Conexión exitosa');
 })
