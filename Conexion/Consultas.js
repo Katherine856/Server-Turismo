@@ -106,6 +106,7 @@ let verComentario = (idServicio, resultado) =>{
 }
 
 let verEmpresas = (resultado) =>{
+  console.log('Entro a ver empresas')
 
   let query = `
   SELECT * FROM Empresa;
