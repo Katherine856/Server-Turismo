@@ -25,7 +25,7 @@ let verificarUsuario = (tipo, correo, contrasena, datosCorrectos) => {
 
 let insertarEmpresa = (datos, resultado) => {
   let query = `
-    INSERT INTO empresa VALUES (${datos.rut}, '${datos.nombre}', '${datos.correo}', '${datos.contrasena}', '${datos.facebook}', '${datos.instagram}', '${datos.whatsapp}', ${datos.telefono}, '${datos.direccion}', 'InActivo')
+    INSERT INTO Empresa VALUES (${datos.rut}, '${datos.nombre}', '${datos.correo}', '${datos.contrasena}', '${datos.facebook}', '${datos.instagram}', '${datos.whatsapp}', ${datos.telefono}, '${datos.direccion}', 'InActivo')
     `
   connection.query(query, (err, result, fields) => {
     if (!err) {
@@ -38,7 +38,7 @@ let insertarEmpresa = (datos, resultado) => {
 
 let insertarUsuario = (datos, resultado) => {
   let query = `
-    INSERT INTO usuario VALUES (${datos.id}, '${datos.nombre}', '${datos.correo}', '${datos.contrasena}', ${datos.telefono})
+    INSERT INTO Usuario VALUES (${datos.id}, '${datos.nombre}', '${datos.correo}', '${datos.contrasena}', ${datos.telefono})
     `
   connection.query(query, (err, result, fields) => {
     if (!err) {
@@ -52,7 +52,7 @@ let insertarUsuario = (datos, resultado) => {
 let insertarServicio = (datos, archivos, resultado) => {
   datos.id = Math.ceil(Math.random() * 2147483646);
   let query = `
-    INSERT INTO servicio VALUES (${datos.id}, '${datos.nombre}', ${datos.idEmpresa}, ${datos.min}, ${datos.max}, '${datos.descripcion}', ${datos.tipo})
+    INSERT INTO Servicio VALUES (${datos.id}, '${datos.nombre}', ${datos.idEmpresa}, ${datos.min}, ${datos.max}, '${datos.descripcion}', ${datos.tipo})
     `;
 
   connection.query(query, (err, result) => {
@@ -75,7 +75,7 @@ let insertarComentario = (titulo, descripcion, valor, idServicio, idUsuario, res
   let id = Math.ceil(Math.random() * 2147483646);
 
   let query = `
-    INSERT INTO calificacion VALUES (${id}, '${titulo}', '${descripcion}', ${valor}, ${idServicio}, ${idUsuario})
+    INSERT INTO Calificacion VALUES (${id}, '${titulo}', '${descripcion}', ${valor}, ${idServicio}, ${idUsuario})
     `;
 
   connection.query(query, (err, result, fields) => {
@@ -91,8 +91,8 @@ let insertarComentario = (titulo, descripcion, valor, idServicio, idUsuario, res
 let verComentario = (idServicio, resultado) =>{
 
   let query = `
-  SELECT Titulo_Calificacion, Valor_Calificacion, Desc_Calificacion, N_Usuario FROM calificacion, usuario 
-  WHERE Id_Servicio = ${idServicio} AND calificacion.Id_Usuario=usuario.Id_Usuario;
+  SELECT Titulo_Calificacion, Valor_Calificacion, Desc_Calificacion, N_Usuario FROM Calificacion, Usuario 
+  WHERE Id_Servicio = ${idServicio} AND Calificacion.Id_Usuario=Usuario.Id_Usuario;
     `;
 
     connection.query(query, (err, result, fields) => {
@@ -145,8 +145,8 @@ let obtenerServiciosEmpresa = (id, resultado) => {
   connection.query(`
   SELECT Id_Servicio, N_Servicio, Empresa.N_Empresa, V_Min_Servicio, V_Max_Servicio, C_T_Servicio 
   FROM Servicio, Empresa, Tipo_Servicio 
-  WHERE servicio.Id_Empresa=Empresa.Id_Empresa 
-  AND tipo_servicio.Id_T_Servicio=servicio.Id_T_Servicio 
+  WHERE Servicio.Id_Empresa=Empresa.Id_Empresa 
+  AND Tipo_Servicio.Id_T_Servicio=Servicio.Id_T_Servicio 
   AND Servicio.Id_Empresa=${id};
   `, (err, result, fields) => {
     if (!err) {
@@ -164,7 +164,7 @@ const obtenerServiciosPorTipo = (id, resultado) => {
   WHERE Empresa.Id_Empresa=Servicio.Id_Empresa 
   AND Servicio.Id_T_Servicio=Tipo_Servicio.Id_T_Servicio
   AND Empresa.E_Empresa='Activo'
-  AND tipo_servicio.N_T_Servicio='${id}';
+  AND Tipo_Servicio.N_T_Servicio='${id}';
   `, (err, result) => {
     if (!err) {
       resultado(result)
