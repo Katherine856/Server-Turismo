@@ -1,8 +1,10 @@
 const config = require('../Config.js');
 const { HOST, USER, PASSWORD, DATABASE, DB_PORT } = config
+//const AcreatePool = require('mysql2/promise');
+//const { createPool } = AcreatePool
 
 let mysql = require('mysql');
-let connection = mysql.createConnection({
+let connection = mysql.createPool({
   host: HOST,
   user: USER,
   password: PASSWORD,
