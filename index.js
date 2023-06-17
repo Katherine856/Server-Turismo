@@ -1,3 +1,6 @@
+const config = require('./Config.js')
+const {PORT} = config
+
 const express = require("express");
 const cors = require('cors');
 const multer = require('multer')
@@ -23,7 +26,7 @@ const upload = multer({
 app.use(express.json())
 
 app.use(cors({ credentials: true, origin: 'https://appturistas.netlify.app' }));
-const port = 5000;
+const port = PORT;
 
 
 //Se hace login

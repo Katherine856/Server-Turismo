@@ -1,9 +1,12 @@
+const config = require('../Config.js');
+const { HOST, USER, PASSWORD, DATABASE } = config
+
 let mysql = require('mysql');
 let connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'pg'
+  host: HOST,
+  user: USER,
+  password: PASSWORD,
+  database: DATABASE
 });
 
 connection.connect((err) => {
